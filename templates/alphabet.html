@@ -1,0 +1,31 @@
+{% extends "bootstrap/base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="panel col-md-6">
+        <table class="table table-bordered">
+            <tr>
+                {% for i in range(0, 51): %}
+                {% if i%5 ==0 %}
+            </tr>
+            <tr>
+                {% endif %}
+                <td>{{katakana[i]}}</td>
+                {% endfor %}
+            </tr>
+        </table>
+    </div>
+    <div class="panel col-md-6">
+        <table class="table table-bordered">
+            <tr>
+                {% for i in range(0, 51): %}
+                {% if i%5 ==0 %}
+            </tr>
+            <tr>
+                {% endif %}
+                <td>{{hiragana[i]}}</td>
+                {% endfor %}
+            </tr>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "bootstrap/base.html" %}
+{% block navbar %}
+<div class="navbar">
+    <ul class="nav nav-tabs">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hiragana <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="/hiragana_alphabet">alphabet</a></li>
+                <li><a href="/communication">communication</a></li>
+                <li><a href="/digit">digit</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Katakana <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="/katakana_alphabet">alphabet</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+{% endblock %}
+{% block content %}
+<div class="container-fluid" style="font-size: 16px; margin-top: 1cm">
+
+    <div class="panel-body text-center">
+        <p><span id='text_hi' style="font-size: 300%;">
+            {% if 'text_digit' in text %}
+                {{text['text_digit']}}
+            {% else %}
+                {{text['text_hi']}}
+            {% endif %}
+        </span></p>
+        <p>
+            <button id="btn_refresh" class="glyphicon glyphicon-refresh"></button>
+            <button id="btn_volume" class="glyphicon glyphicon-volume-up"></button>
+        </p>
+        <hr>
+        <p>
+            <input type="text" id="txt_text" style="border: 1px solid #333333; margin: auto; padding: 4px">
+            <button id="btn_check" type="button">CHECK</button>
+        </p>
+        <p><label id="lbl_check" style="color: #9C1A1C"></label></p>
+    </div>
+    {% if alpha %}
+    <div class="text-center">
+        <p><span data-toggle="collapse" data-target="#demo">show alphabet</span></p>
+        <div id="demo" class="collapse" style="max-width: 500px; margin: auto">
+            <table class="table table-bordered">
+                <tr>
+                    {% for i in range(0, 55): %}
+                    {% if i%5 ==0 %}
+                </tr>
+                <tr>
+                    {% endif %}
+                    <td>{{alpha[i]}}</td>
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block scripts %}
+{{super()}}
+<script>
+    choose_fail = ['wrong, stupid', 'wrong', 'Oh, wrong wrong', "You're wrong"]
+    text_ro = '{{text["text_ro"]}}';
+    text_hi = "{{text['text_hi']}}";
+
+    function choose(choices) {
+        var index = Math.floor(Math.random() * choices.length);
+        return choices[index];
+    };
+
+    document.getElementById('btn_check').onclick = function () {
+        text_input = document.getElementById('txt_text').value;
+        if (text_input == text_ro) {
+            document.getElementById('lbl_check').innerText = "{{text['text_true']}}"
+            setTimeout(function () {
+                location.reload(true);
+            }, 1500);
+        }
+        else {
+            document.getElementById('lbl_check').innerText = choose(choose_fail)
+        }
+    };
+    document.getElementById('text_hi').onclick = function () {
+        if (this.textContent == text_ro) {
+            this.textContent = text_hi
+        }
+        else this.textContent = text_ro
+
+    };
+    document.getElementById('btn_refresh').onclick = function () {
+        location.reload(true);
+    };
+    document.getElementById('btn_volume').onclick = function () {
+        msg = new SpeechSynthesisUtterance(text_hi);
+        // var voices = window.speechSynthesis.getVoices();
+        // msg.voice = voices[10];
+        // msg.voiceURI = "native";
+        // msg.volume = 1;
+        // msg.rate = 1;
+        // msg.pitch = 0.8;
+        msg.lang = 'ja-JP';
+        window.speechSynthesis.speak(msg);
+    };
+
+</script>
+{% endblock %}
